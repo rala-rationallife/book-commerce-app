@@ -3,7 +3,7 @@ import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { ogMeta, siteMeta } from "@/_lib/constants";
 import { Header } from "@/_components/header";
-import { Footer } from "@/_components/footer";
+import { NextAuthProvider } from "@/_components/provider";
 
 const notoSansJP = Noto_Sans_JP({ subsets: ["latin"], weight: ["400"] });
 
@@ -40,11 +40,11 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={notoSansJP.className}>
-        <Header />
+        <NextAuthProvider>
+          <Header />
 
-        {children}
-
-        <Footer />
+          {children}
+        </NextAuthProvider>
       </body>
     </html>
   );
