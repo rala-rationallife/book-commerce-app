@@ -5,5 +5,6 @@ declare namespace NodeJS {
     GITHUB_SECRET: string;
     NEXT_PUBLIC_SERVICE_DOMAIN: string;
     NEXT_PUBLIC_API_KEY: string;
+    STRIPE_SECRET_KEY: string;
   }
 }

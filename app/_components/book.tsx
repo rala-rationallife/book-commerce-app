@@ -15,8 +15,37 @@ interface BookProps {
 export function Book({ book }: BookProps) {
   const [showModal, setShowModal] = useState(false);
   const { data: session } = useSession();
-  const user = session?.user;
+  const user: any = session?.user;
   const router = useRouter();
+
+  console.log(user?.id);
+  console.log(book.id);
+
+  const startCheckout = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SITE_URL}/api/checkout`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: book.title,
+            price: book.price,
+            userId: user?.id,
+            bookId: book.id,
+          }),
+        }
+      );
+
+      const resData = await res.json();
+
+      if (resData) {
+        router.push(resData.checkout_url);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handlePurchaseClick = () => {
     setShowModal(true);
@@ -33,6 +62,7 @@ export function Book({ book }: BookProps) {
       router.push("/login");
     } else {
       // Stripeで決済
+      startCheckout();
     }
   };
 
