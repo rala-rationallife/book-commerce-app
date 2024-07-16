@@ -1,25 +1,22 @@
 "use client";
 
-import { BookType } from "@/types/types";
+import { type BookType, type User } from "@/types/types";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface BookProps {
   book: BookType;
+  isPurchased: boolean;
 }
 
 // eslint-disable-next-line react/display-name
-export function Book({ book }: BookProps) {
+export function Book({ book, isPurchased }: BookProps) {
   const [showModal, setShowModal] = useState(false);
   const { data: session } = useSession();
-  const user: any = session?.user;
+  const user = session?.user as User;
   const router = useRouter();
-
-  console.log(user?.id);
-  console.log(book.id);
 
   const startCheckout = async () => {
     try {
@@ -48,7 +45,11 @@ export function Book({ book }: BookProps) {
   };
 
   const handlePurchaseClick = () => {
-    setShowModal(true);
+    if (isPurchased) {
+      alert("購入済みです");
+    } else {
+      setShowModal(true);
+    }
   };
 
   const handleCancel = () => {
@@ -102,6 +103,7 @@ export function Book({ book }: BookProps) {
             <h2 className="text-lg font-semibold">{book.title}</h2>
             <p className="mt-2 text-lg text-slate-600">この本は○○...</p>
             <p className="mt-2 text-md text-slate-700">{book.price} 円</p>
+            {isPurchased && <p>購入済</p>}
           </div>
         </a>
 
