@@ -1,12 +1,14 @@
-"use client";
-import { signOut, useSession } from "next-auth/react";
+import { nextAuthOptions } from "@/_lib/next-auth/options";
+import { type User } from "@/types/types";
+import { getServerSession } from "next-auth";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-export function Header() {
-  const { data: session } = useSession();
-  const user = session?.user;
+export async function Header() {
+  const session = await getServerSession(nextAuthOptions);
+  const user = session?.user as User;
 
   return (
     <header className="bg-slate-600 text-gray-100 shadow-lg">
@@ -29,15 +31,13 @@ export function Header() {
             {user ? "プロフィール" : "ログイン"}
           </Link>
 
-          {user ? (
+          {user && (
             <button
-              onClick={() => signOut({ callbackUrl: "/login" })}
+              // onClick={() => signOut({ callbackUrl: "/login" })}
               className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
             >
               ログアウト
             </button>
-          ) : (
-            ""
           )}
 
           <Link href={`/profile`}>
